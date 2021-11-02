@@ -7,12 +7,12 @@ function computerPlay(){
         return "paper";
     }
     else{
-        return "scissor";
+        return "scissors";
     }
 }
 
 function playRound(playerSelection, computerSelection){
-    if((playerSelection.toLowerCase() === "paper" && computerSelection.toLowerCase() === "rock") || (playerSelection.toLowerCase() === "rock" && computerSelection.toLowerCase() === "scissor") || (playerSelection.toLowerCase() === "scissor" && computerSelection.toLowerCase() === "paper")){
+    if((playerSelection.toLowerCase() === "paper" && computerSelection.toLowerCase() === "rock") || (playerSelection.toLowerCase() === "rock" && computerSelection.toLowerCase() === "scissors") || (playerSelection.toLowerCase() === "scissors" && computerSelection.toLowerCase() === "paper")){
         return "You win! "+capitilize(playerSelection)+" beats "+capitilize(computerSelection)+".";
     }
     else if(playerSelection.toLowerCase() === computerSelection.toLowerCase()){
@@ -27,57 +27,76 @@ function capitilize(text){
     return text.toLowerCase().replace(text[0], text[0].toUpperCase());
 }
 
-function validation (playerSelection){
-    if(playerSelection != "scissor" && playerSelection != "rock" && playerSelection != "paper" ){
-        alert("Wrong Input!");
-        return true;
-    }
-    else{
-        return false;
-    }
+
+function game(){ 
+let computerPoint = 0;
+let playerPoint = 0; 
+const container = document.querySelector('#container');
+const score = document.createElement("p");
+const winner = document.createElement("p");
+const playerScore = document.createElement("span");
+const computerScore = document.createElement("span");
+score.classList.add('scoreBoard');   
+score.appendChild(playerScore);
+score.appendChild(computerScore);
+container.appendChild(score);
+container.appendChild(winner);
+    const choice = document.querySelectorAll('button');
+        choice.forEach((button) => {
+            button.addEventListener('click', () => {
+                const computerSelection = computerPlay();
+                if(button.id === "paper"){
+                    winner.textContent = playRound("paper", computerSelection);
+                }
+                else if(button.id === "rock"){
+                    winner.textContent = playRound("rock", computerSelection);
+                }
+                else{
+                    winner.textContent = playRound("scissors", computerSelection);
+                }
+            
+                if(playRound(button.id, computerSelection) === "You Lose! "+capitilize(computerSelection)+" beats "+capitilize(button.id)+"."){
+                        ++computerPoint;       
+                        computerScore.textContent = " Computer: "+ computerPoint;
+                        playerScore.textContent = "Player: " + playerPoint;
+                    }
+                    else if (playRound(button.id, computerSelection) === "You win! "+capitilize(button.id)+" beats "+capitilize(computerSelection)+"."){
+                        ++playerPoint;                        
+                        computerScore.textContent = " Computer: "+ computerPoint;
+                        playerScore.textContent = "Player: " + playerPoint;
+
+                    }
+                    else{                       
+                        computerScore.textContent = " Computer: "+ computerPoint;
+                        playerScore.textContent = "Player: " + playerPoint;
+                    }
+                    
+                if(computerPoint === 5){
+                    computerPoint = 0;
+                    playerPoint = 0;
+                    computerScore.textContent = " Computer: "+ computerPoint;
+                    playerScore.textContent = "Player: " + playerPoint;
+                    winner.innerHTML = "COMPUTER WINS THE GAME!!!<br>REMATCH?";
+
+                }
+                else if(playerPoint === 5) {
+                    computerPoint = 0;
+                    playerPoint = 0;
+                    computerScore.textContent = " Computer: "+ computerPoint;
+                    playerScore.textContent = "Player: " + playerPoint;
+                    winner.innerHTML = "PLAYER WINS THE GAME!!!<br>REMATCH?";
+                }
+                
+            });
+        });
+
 }
 
-function game(){
-    let playerPoints = 0;
-    let computerPoints = 0;
-    for(let i = 0; i <= 4; i++){
-        let playerSelection = prompt("Choose between Paper, Rock or Scissor");
-        if(playerSelection === ""){
-            alert("YOU MUST CHOOSE!");
-            i--;
-            continue;
-        } 
-        if(validation(playerSelection.toLowerCase())){
-            i--;
-            continue;
-        }
-        const computerSelection = computerPlay();
-        console.log(playRound(playerSelection, computerSelection));
-     
-        if(playRound(playerSelection, computerSelection) === "You Lose! "+capitilize(computerSelection)+" beats "+capitilize(playerSelection)+"."){
-            computerPoints++;
-            console.log("Computer : Player")
-            console.log(computerPoints+ " : "+playerPoints);
-        }
-        else if (playRound(playerSelection, computerSelection) === "You win! "+capitilize(playerSelection)+" beats "+capitilize(computerSelection)+"."){
-            playerPoints++;
-            console.log("Computer : Player")
-            console.log(computerPoints+ " : "+playerPoints);
-        }
-        else{
-            console.log("Computer : Player")
-            console.log(computerPoints+ " : "+playerPoints);
-        }
-    }
-    if(playerPoints > computerPoints){
-        console.log("YOU WIN THE GAME!!!!");
-    }
-    else if (playerPoints < computerPoints){
-        console.log("YOU LOSE THE GAME:(");
-    }
-    else{
-        console.log("YOU TIED THE GAME :|");
-    }
-}
 
 game();
+
+
+
+
+
+   
